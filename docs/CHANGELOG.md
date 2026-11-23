@@ -1,5 +1,62 @@
 # Changelog
 
+## Unreleased
+
+- A Cloud owl's running work no longer stops with "storage was briefly unavailable" when a
+  backup, recovery, health or release tool opens the shared database beside the running
+  controller. Opening it set the schema up again, which locks the tables even when nothing
+  changes, and work waiting behind those locks gave up. Those tools now only read that the
+  database is set up for their release; only the controller's own start sets it up.
+- Owl and browser tool descriptions say each rule once, in fewer words, so an owl's tools take
+  less of the model's window (an owl with every feature 4-7% less) and leave room for a connected
+  app's tools on a 128,000-token window; a test bounds their size so it can't grow back unnoticed.
+- Owl tools take another 3-5% less of the model's window. The routine tools (create, propose and
+  edit a routine, and propose a setup) say the time-zone rule once instead of in every timing
+  kind, no longer list the single weekday kept only for routines saved before multi-day weeks,
+  and drop the OpenAPI "discriminator" a model reads nothing from; their longest texts and four
+  computer tools' say the same rules in fewer words. The size bounds are lowered to match.
+- Several reads an owl asks for at once (web searches and pages, its files, memory, notes and
+  history) run side by side, so four pages take about as long as the slowest one; any other step
+  still runs alone and in order, and Stop ends the turn without waiting for reads in flight.
+- Reads an owl runs side by side are checked by the repeat guard exactly as if they ran one by
+  one: a read asked right after another is never taken for a back-to-back repeat (before, a
+  rare turn stopped one step early), and a read refused for failing the same way again waits
+  for the reads before it, so one of them working lets it run once more.
+- An owl's next turn in a long chat starts right away: a few seconds after a turn ends, while the
+  owl is idle, it writes the summary of its earlier chat and sorts the memories saved since, so the
+  person's next message no longer waits for them. A message sent before that is done is answered
+  as before, and nothing written from a chat that changed meanwhile is used.
+- Memories the person adds, edits, approves, undoes or deletes in the app are sorted the same
+  way a few seconds later, while the owl is idle, so its next turn no longer starts by sorting
+  them.
+- Owls search, filter, page and follow links on websites without waiting for a model review when
+  the page's own HTML proves nothing leaves the page: typing into a search field, filling and
+  sending a form that submits with GET to the page's own site, and following a plain link. Each
+  such step is recorded as settled by the page's structure. Everything else (POST forms, GET to
+  another site, rich-text editors, password, payment, personal, file or free-text fields, links
+  that run script, download, ping or open a new tab, inline or framework script on or around the
+  element) is reviewed as before, and "ask first" rules and reviewing every step yourself still
+  win. The form details the reviewer sees now follow HTML's own rules too: Enter in a field uses
+  the form's default button, and addresses are read against the page's base address.
+- A Cloud owl's computer stays when a step that only reads it (a page, the screen, the clipboard)
+  gets no complete answer, or when its browser refuses invalid input; only a change whose outcome
+  is unknown still retires it. Each answer that does not arrive whole is recorded for support as a
+  `computer_receipt_unconfirmed` task event: Azure's HTTP status and error code, the timeout or
+  allowance crossed, the guest command's exit status, how much output arrived and whether it was
+  cut, the time taken and, when the computer gave no answer, its memory and whether its
+  dispatcher still runs. Never the request or its output.
+- A Cloud owl reads long pages in its own browser. Azure returns at most 1 MiB of a command's
+  output and stops the command beyond it, so a heavy page's snapshot (a long article, in any
+  language) never arrived and the read was lost. A reply larger than the provider declares it
+  returns is now kept privately on the computer and read in parts, each part asked for again if
+  it is lost, and the whole is checked against its size and SHA-256 before use. This works with
+  every computer image already published; the request itself still runs once and is never
+  replayed.
+- A Cloud owl's computer no longer shuts its browser and desktop when a request's answer comes
+  after the host stopped waiting for it, or when a request never arrives whole: the computer's
+  dispatcher drops that answer (the host already treats the outcome as unconfirmed) and keeps
+  serving. A replayed request still ends it. Takes effect with the next Cloud computer image.
+
 ## 0.18.1 - 2026-11-23
 
 - GLM-5.4 is a reviewed model on the Z.AI GLM Coding Plan connection and the default for new
